@@ -4,16 +4,19 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -28,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,84 +51,82 @@ fun Login(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .verticalScroll(rememberScrollState())
+            .imePadding()
+            .padding(horizontal = 24.dp, vertical = 40.dp),
     ) {
+        Spacer(modifier = Modifier.height(20.dp))
         Image(
             painter = painterResource(R.drawable.logo),
             contentDescription = "logo",
             modifier = Modifier
-                .size(165.dp)
+                .size(130.dp)
                 .clip(CircleShape)
                 .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                .padding(10.dp),
+                .padding(8.dp),
         )
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = "Welcome Back",
-            fontSize = 25.sp,
+            fontSize = 24.sp,
             style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = "Login to continue with your account",
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             style = MaterialTheme.typography.bodyMedium,
         )
 
-        Box(
-            modifier = Modifier.size(350.dp),
-            contentAlignment = Alignment.Center,
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column {
-                OutlinedTextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text("Username") },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+            )
 
-                Spacer(modifier = Modifier.height(20.dp))
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+            )
 
-                Spacer(modifier = Modifier.height(30.dp))
-                Box(
-                    modifier = Modifier.size(width = 450.dp, height = 45.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Button(
-                        onClick = {
-                            println("Login clicked")
-                            onLoginSuccess()
-                        },
-                        modifier = Modifier
-                            .size(width = 200.dp, height = 45.dp)
-                            .fillMaxSize(),
-                    ) {
-                        Text(text = "Login")
-                    }
-                }
+            Spacer(modifier = Modifier.height(28.dp))
 
-                Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                onClick = {
+                    println("Login clicked")
+                    onLoginSuccess()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = CircleShape,
+            ) {
+                Text(text = "Login", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            }
 
-                Box(
-                    modifier = Modifier.size(width = 450.dp, height = 45.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    TextButton(onClick = onNavigateToSignup) {
-                        Text(text = "Don't have an account? Sign up")
-                    }
-                }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(onClick = onNavigateToSignup) {
+                Text(text = "Don't have an account? Sign up")
             }
         }
     }

@@ -187,7 +187,10 @@ fun LoansScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f),
+                    ) {
                         Surface(
                             modifier = Modifier.size(40.dp),
                             shape = CircleShape,
@@ -203,24 +206,29 @@ fun LoansScreen(
                             }
                         }
                         Spacer(modifier = Modifier.width(12.dp))
-                        Column {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                        ) {
                             Text(
                                 text = "Micro-Advance Facility",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFF0F172A),
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = "Disbursed 15 Aug 2024 • Fully Paid",
-                                fontSize = 12.sp,
+                                fontSize = 11.sp,
                                 color = Color(0xFF64748B),
                             )
                         }
                     }
 
+                    Spacer(modifier = Modifier.width(8.dp))
+
                     Text(
                         text = "MWK 200,000",
-                        fontSize = 14.sp,
+                        fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF059669),
                     )

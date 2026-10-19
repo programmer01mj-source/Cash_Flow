@@ -1,6 +1,7 @@
 package com.example.cashflow.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -45,16 +47,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cashflow.R
 import com.example.cashflow.ui.theme.CashFlowTheme
 
 enum class CashFlowAppScreen {
     WELCOME,
     LOGIN,
+    SIGNUP,
     DASHBOARD,
     CALCULATOR,
     KYC,
@@ -78,7 +83,7 @@ fun CashFlowScreen(
             CashFlowAppScreen.WELCOME -> {
                 WelcomeScreen(
                     modifier = Modifier.fillMaxSize(),
-                    onGetStartedClick = { currentScreen = CashFlowAppScreen.LOGIN },
+                    onGetStartedClick = { currentScreen = CashFlowAppScreen.SIGNUP },
                     onLoginClick = { currentScreen = CashFlowAppScreen.LOGIN },
                     onSkipClick = { currentScreen = CashFlowAppScreen.DASHBOARD },
                 )
@@ -88,7 +93,15 @@ fun CashFlowScreen(
                     modifier = Modifier.fillMaxSize(),
                     onSignInClick = { currentScreen = CashFlowAppScreen.DASHBOARD },
                     onBiometricsClick = { currentScreen = CashFlowAppScreen.DASHBOARD },
-                    onRegisterClick = { currentScreen = CashFlowAppScreen.WELCOME },
+                    onRegisterClick = { currentScreen = CashFlowAppScreen.SIGNUP },
+                )
+            }
+            CashFlowAppScreen.SIGNUP -> {
+                SignUpScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClick = { currentScreen = CashFlowAppScreen.WELCOME },
+                    onSignUpSuccess = { currentScreen = CashFlowAppScreen.DASHBOARD },
+                    onLoginClick = { currentScreen = CashFlowAppScreen.LOGIN },
                 )
             }
             CashFlowAppScreen.DASHBOARD -> {
@@ -150,238 +163,85 @@ fun WelcomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 16.dp),
+                .imePadding()
+                .padding(horizontal = 24.dp, vertical = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
+            // Top App Bar / Skip button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TextButton(onClick = onSkipClick) {
+                    Text(
+                        text = "Skip",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF0066B3),
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Center Content: Logo, Company Name, Slogan
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                // Top App Bar (Logo + Brand + Skip)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Surface(
-                            modifier = Modifier.size(42.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            color = Color(0xFF0066B3),
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text(
-                                    text = "R",
-                                    color = Color.White,
-                                    fontSize = 22.sp,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.width(10.dp))
-
-                        Column {
-                            Text(
-                                text = "cashflowPartners",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF0F172A),
-                            )
-                            Text(
-                                text = "Simple • Secure • Flexible",
-                                fontSize = 11.sp,
-                                color = Color(0xFF64748B),
-                            )
-                        }
-                    }
-
-                    TextButton(onClick = onSkipClick) {
-                        Text(
-                            text = "Skip",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF0066B3),
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Hero Card
                 Surface(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .size(160.dp)
                         .shadow(
-                            elevation = 12.dp,
-                            shape = RoundedCornerShape(32.dp),
-                            ambientColor = Color.Black.copy(alpha = 0.04f),
-                            spotColor = Color.Black.copy(alpha = 0.08f),
+                            elevation = 16.dp,
+                            shape = CircleShape,
+                            ambientColor = Color.Black.copy(alpha = 0.05f),
+                            spotColor = Color.Black.copy(alpha = 0.1f),
                         ),
-                    shape = RoundedCornerShape(32.dp),
+                    shape = CircleShape,
                     color = Color.White,
                 ) {
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = Color(0xFFE8F2FC),
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Shield,
-                                    contentDescription = null,
-                                    tint = Color(0xFF0066B3),
-                                    modifier = Modifier.size(15.dp),
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "Up to MWK 2,500,000 with flexible tenures",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF0066B3),
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Box(
-                            modifier = Modifier.size(100.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Surface(
-                                modifier = Modifier.size(88.dp),
-                                shape = RoundedCornerShape(24.dp),
-                                color = Color(0xFFD6E8FA),
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Icon(
-                                        imageVector = Icons.Default.Wallet,
-                                        contentDescription = null,
-                                        tint = Color(0xFF0066B3),
-                                        modifier = Modifier.size(44.dp),
-                                    )
-                                }
-                            }
-
-                            Surface(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .align(Alignment.BottomEnd),
-                                shape = CircleShape,
-                                color = Color(0xFF00C853),
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Icon(
-                                        imageVector = Icons.Default.ElectricBolt,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.size(18.dp),
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        Text(
-                            text = "Get the funds you need",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF0F172A),
-                            textAlign = TextAlign.Center,
+                    Box(contentAlignment = Alignment.Center) {
+                        Image(
+                            painter = painterResource(R.drawable.logo),
+                            contentDescription = "CashFlow Logo",
+                            modifier = Modifier
+                                .size(140.dp)
+                                .clip(CircleShape),
                         )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = "Apply for an instant digital loan quickly and securely directly from your mobile device.",
-                            fontSize = 14.sp,
-                            color = Color(0xFF475467),
-                            textAlign = TextAlign.Center,
-                            lineHeight = 20.sp,
-                        )
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .width(24.dp)
-                                    .height(7.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(0xFF0066B3)),
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Box(
-                                modifier = Modifier
-                                    .size(7.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(0xFFD0E2F5)),
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Box(
-                                modifier = Modifier
-                                    .size(7.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(0xFFD0E2F5)),
-                            )
-                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
-                WelcomeFeatureCardItem(
-                    icon = Icons.Default.Wallet,
-                    title = "Instant Loan Access",
-                    subtitle = "Fast automated scoring & rapid payout",
-                    trailingIconType = WelcomeTrailingIconType.CHECK,
+                Text(
+                    text = "cashflowPartners",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF0F172A),
+                    textAlign = TextAlign.Center,
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                WelcomeFeatureCardItem(
-                    icon = Icons.Default.Calculate,
-                    title = "Know Your Repayment",
-                    subtitle = "Transparent rates, zero hidden fees",
-                    trailingIconType = WelcomeTrailingIconType.CHEVRON,
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                WelcomeFeatureCardItem(
-                    icon = Icons.Default.Schedule,
-                    title = "Stay In Total Control",
-                    subtitle = "Track installments & live schedules",
-                    trailingIconType = WelcomeTrailingIconType.CHEVRON,
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                WelcomeFeatureCardItem(
-                    icon = Icons.Default.Security,
-                    title = "Bank-grade 256-bit encryption",
-                    subtitle = "& licensed micro-lending compliance.",
-                    trailingIconType = WelcomeTrailingIconType.NONE,
+                Text(
+                    text = "Simple • Secure • Flexible",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF64748B),
+                    textAlign = TextAlign.Center,
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
+            // Bottom Actions: Get Started & Log In
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Button(
                     onClick = onGetStartedClick,
@@ -430,17 +290,6 @@ fun WelcomeScreen(
                         text = "I already have an account — Log In",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                TextButton(onClick = onExploreClick) {
-                    Text(
-                        text = "Explore all features",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF64748B),
                     )
                 }
             }
